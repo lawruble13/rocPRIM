@@ -108,20 +108,24 @@ print_configuration_summary()
 # rocPRIM library
 add_subdirectory(rocprim)
 
+set(ROCM_COMPONENTS )
 # Tests
 if(BUILD_TEST AND NOT ONLY_INSTALL)
   enable_testing()
   add_subdirectory(test)
+  set(ROCM_COMPONENTS clients)
 endif()
 
 # Benchmarks
 if(BUILD_BENCHMARK AND NOT ONLY_INSTALL)
   add_subdirectory(benchmark)
+  set(ROCM_COMPONENTS clients)
 endif()
 
 # Examples
 if(BUILD_EXAMPLE AND NOT ONLY_INSTALL)
   add_subdirectory(example)
+  set(ROCM_COMPONENTS clients)
 endif()
 
 # Package
@@ -129,9 +133,6 @@ endif()
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "hip-rocclr (>= 3.5.0)")
 set(CPACK_RPM_PACKAGE_REQUIRES "hip-rocclr >= 3.5.0")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.txt")
-if(NOT CPACK_PACKAGING_INSTALL_PREFIX)
-  set(CPACK_PACKAGING_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
-endif()
 
 set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION "\${CPACK_PACKAGING_INSTALL_PREFIX}" "\${CPACK_PACKAGING_INSTALL_PREFIX}/include" )
 
@@ -139,4 +140,5 @@ rocm_create_package(
   NAME rocprim
   DESCRIPTION "Radeon Open Compute Parallel Primitives Library"
   MAINTAINER "rocPRIM Maintainer <rocprim-maintainer@amd.com>"
+  COMPONENTS ${ROCM_COMPONENTS}
 )

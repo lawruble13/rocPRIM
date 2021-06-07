@@ -37,6 +37,11 @@ function(add_rocprim_example EXAMPLE_SOURCE)
     PROPERTIES
       RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/example"
   )
+  install(
+    TARGETS ${TEST_TARGET}
+    DESTINATION "rocprim/bin"
+    COMPONENT clients
+  )
 endfunction()
 
 # ****************************************************************************

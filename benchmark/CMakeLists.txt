@@ -43,6 +43,11 @@ function(add_rocprim_benchmark BENCHMARK_SOURCE)
   if(BENCHMARK_CONFIG_TUNING)
     target_compile_definitions(${BENCHMARK_TARGET} PRIVATE BENCHMARK_CONFIG_TUNING)
   endif()
+  install(
+    TARGETS ${BENCHMARK_TARGET}
+    DESTINATION "rocprim/bin"
+    COMPONENT clients
+  )
 endfunction()
 
 # ****************************************************************************

@@ -56,6 +56,12 @@ function(add_hip_test TEST_NAME TEST_SOURCES)
   )
 
   add_test(${TEST_NAME} ${TEST_TARGET})
+
+  install(
+    TARGETS ${TEST_TARGET}
+    DESTINATION "rocprim/bin/"
+    COMPONENT clients
+  )
 endfunction()
 
 # ****************************************************************************

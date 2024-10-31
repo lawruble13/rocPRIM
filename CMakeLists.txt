@@ -38,19 +38,6 @@ set(CMAKE_HIP_STANDARD 14)
 set(CMAKE_HIP_STANDARD_REQUIRED ON)
 set(CMAKE_HIP_EXTENSIONS OFF)
 
-if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
-  set(ROCPRIM_PROJECT_IS_TOP_LEVEL TRUE)
-else()
-  set(ROCPRIM_PROJECT_IS_TOP_LEVEL FALSE)
-endif()
-
-#Adding CMAKE_PREFIX_PATH
-if(WIN32)
-  set(ROCM_ROOT "$ENV{HIP_PATH}" CACHE PATH "Root directory of the ROCm installation")
-else()
-  set(ROCM_ROOT "/opt/rocm" CACHE PATH "Root directory of the ROCm installation")
-endif()
-
 include(CheckLanguage)
 include(CMakeDependentOption)
 
@@ -68,6 +55,19 @@ option(ROCPRIM_INSTALL "Enable installation of rocPRIM (projects embedding rocPR
 
 check_language(HIP)
 cmake_dependent_option(USE_HIPCXX "Use CMake HIP language support" OFF CMAKE_HIP_COMPILER OFF)
+
+if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+  set(ROCPRIM_PROJECT_IS_TOP_LEVEL TRUE)
+else()
+  set(ROCPRIM_PROJECT_IS_TOP_LEVEL FALSE)
+endif()
+
+#Adding CMAKE_PREFIX_PATH
+if(WIN32)
+  set(ROCM_ROOT "$ENV{HIP_PATH}" CACHE PATH "Root directory of the ROCm installation")
+else()
+  set(ROCM_ROOT "/opt/rocm" CACHE PATH "Root directory of the ROCm installation")
+endif()
 
 # CMake modules
 list(APPEND CMAKE_MODULE_PATH

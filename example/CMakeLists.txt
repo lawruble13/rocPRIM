@@ -22,7 +22,13 @@
 
 function(add_rocprim_example EXAMPLE_SOURCE)
   get_filename_component(EXAMPLE_TARGET ${EXAMPLE_SOURCE} NAME_WE)
+
+  if(USE_HIPCXX)
+    set_source_files_properties(${EXAMPLE_SOURCE} PROPERTIES LANGUAGES HIP)
+  endif()
+
   add_executable(${EXAMPLE_TARGET} ${EXAMPLE_SOURCE})
+  
   target_link_libraries(${EXAMPLE_TARGET}
     PRIVATE
     rocprim_hip
@@ -63,7 +69,7 @@ function(add_rocprim_example EXAMPLE_SOURCE)
     foreach( file_i ${third_party_dlls})
       add_custom_command( TARGET ${EXAMPLE_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} ARGS -E copy_if_different ${file_i} ${PROJECT_BINARY_DIR}/example )
     endforeach( file_i )
-  endif()     
+  endif()
 endfunction()
 
 # ****************************************************************************

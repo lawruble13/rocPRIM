@@ -22,9 +22,20 @@
 
 cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
 
+include(CheckLanguage)
+include(CMakeDependentOption)
+
+check_language(HIP)
+cmake_dependent_option(USE_HIPCXX "Use CMake HIP language support" OFF CMAKE_HIP_COMPILER OFF)
+if(USE_HIPCXX)
+  set(PROJECT_LANG HIP)
+else()
+  set(PROJECT_LANG CXX)
+endif()
+
 # This project includes tests that should be run after
 # rocPRIM is installed from package or using `make install`
-project(rocprim_package_install_test CXX)
+project(rocprim_package_install_test ${PROJECT_LANG})
 
 # CMake modules
 list(APPEND CMAKE_MODULE_PATH
@@ -46,10 +57,10 @@ include(VerifyCompiler)
 find_package(rocprim REQUIRED CONFIG PATHS "/opt/rocm/rocprim")
 
 # Build CXX flags
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
+set(CMAKE_${PROJECT_LANG}_STANDARD 14)
+set(CMAKE_${PROJECT_LANG}_STANDARD_REQUIRED ON)
+set(CMAKE_${PROJECT_LANG}_EXTENSIONS OFF)
+set(CMAKE_${PROJECT_LANG}_FLAGS "${CMAKE_${PROJECT_LANG}_FLAGS} -Wall -Wextra -Werror")
 
 # Enable testing (ctest)
 enable_testing()

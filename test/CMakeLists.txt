@@ -72,15 +72,18 @@ function(add_hip_test TEST_NAME TEST_SOURCES)
       GTest::GTest
       GTest::Main
   )
+  target_link_libraries(${TEST_TARGET}
+    PRIVATE
+      rocprim
+  )
   if(NOT USE_HIP_CPU)
     target_link_libraries(${TEST_TARGET}
       PRIVATE
-        rocprim_hip
+        $<IF:$<LINK_LANGUAGE:HIP>,hip::host,hip::device>
     )
   else()
     target_link_libraries(${TEST_TARGET}
       PRIVATE
-        rocprim
         Threads::Threads
         hip_cpu_rt::hip_cpu_rt
     )

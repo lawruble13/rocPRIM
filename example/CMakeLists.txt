@@ -28,15 +28,15 @@ function(add_rocprim_example EXAMPLE_SOURCE)
   endif()
 
   add_executable(${EXAMPLE_TARGET} ${EXAMPLE_SOURCE})
-  
+
   target_link_libraries(${EXAMPLE_TARGET}
     PRIVATE
-    rocprim_hip
+    rocprim
   )
   if(NOT USE_HIP_CPU)
     target_link_libraries(${EXAMPLE_TARGET}
       PRIVATE
-        rocprim_hip
+        $<IF:$<LINK_LANGUAGE:HIP>,hip::host,hip::device>
     )
   else()
     target_link_libraries(${TEST_EXAMPLE_TARGETTARGET}

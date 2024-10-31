@@ -75,7 +75,7 @@ function(add_rocprim_benchmark BENCHMARK_SOURCE)
   if(NOT USE_HIP_CPU)
     target_link_libraries(${BENCHMARK_TARGET}
       PRIVATE
-        rocprim_hip
+        $<IF:$<LINK_LANGUAGE:HIP>,hip::host,hip::device>
     )
   else()
     target_link_libraries(${BENCHMARK_TARGET}

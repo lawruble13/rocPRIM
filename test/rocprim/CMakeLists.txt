@@ -36,7 +36,7 @@ endfunction()
 
 function(add_rocprim_test_internal TEST_NAME TEST_SOURCES TEST_TARGET)
   if(USE_HIPCXX)
-    set_source_files_properties(${TEST_SOURCES} PROPERTIES LANGUAGES HIP)
+    set_source_files_properties(${TEST_SOURCES} PROPERTIES LANGUAGE HIP)
   endif()
   add_executable(${TEST_TARGET} ${TEST_SOURCES})
   if (ROCPRIM_INSTALL)
@@ -50,18 +50,18 @@ function(add_rocprim_test_internal TEST_NAME TEST_SOURCES TEST_TARGET)
 
   target_link_libraries(${TEST_TARGET}
     PRIVATE
+      rocprim
       GTest::GTest
       GTest::Main
   )
   if(NOT USE_HIP_CPU)
     target_link_libraries(${TEST_TARGET}
       PRIVATE
-        rocprim_hip
+        $<IF:$<LINK_LANGUAGE:HIP>,hip::host,hip::device>
     )
   else()
     target_link_libraries(${TEST_TARGET}
       PRIVATE
-        rocprim
         Threads::Threads
         hip_cpu_rt::hip_cpu_rt
     )
@@ -78,6 +78,7 @@ function(add_rocprim_test_internal TEST_NAME TEST_SOURCES TEST_TARGET)
       $<$<CXX_COMPILER_ID:MSVC>:
         /bigobj # number of sections exceeded object file format limit: compile with /bigobj
       >
+      $<$<COMPILE_LANGUAGE:HIP>:$<$<HIP_COMPILER_ID:MSVC>:/bigobj>>
   )
 
   set_target_properties(${TEST_TARGET}
@@ -227,6 +228,11 @@ function(add_rocprim_cpp17_test TEST_NAME TEST_SOURCES)
   set_target_properties(${TEST_TARGET}
     PROPERTIES
     CXX_STANDARD 17)
+  if(USE_HIPCXX)
+    set_target_properties(${TEST_TARGET}
+      PROPERTIES
+      HIP_STANDARD 17)
+  endif()
 endfunction()
 
 
